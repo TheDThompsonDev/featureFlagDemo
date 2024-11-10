@@ -18,14 +18,14 @@ export const FeatureFlagsProvider = ({
   children: React.ReactNode;
 }) => {
   const [flags, setFlags] = useState({
-    cryptoPayments: false,
-    loyaltyRewards: false,
+    isCryptoPaymentsEnabled: false,
+    isLoyaltyRewardsEnabled: false,
   });
 
   const toggleFlag = (flagName: string) => {
     setFlags((prev) => ({
       ...prev,
-      [flagName]: !prev[flagName],
+      [flagName]: !prev[flagName as keyof typeof prev],
     }));
   };
 

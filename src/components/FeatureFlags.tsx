@@ -4,10 +4,12 @@ import React, { createContext, useContext, useState } from "react";
 
 type FeatureFlagsContextType = {
   flags: {
-    cryptoPayments: boolean;
-    loyaltyRewards: boolean;
+    isCryptoPaymentsEnabled: boolean;
+    isLoyaltyRewardsEnabled: boolean;
   };
-  toggleFlag: (flagName: string) => void;
+  toggleFlag: (
+    flagName: "isCryptoPaymentsEnabled" | "isLoyaltyRewardsEnabled"
+  ) => void;
 };
 
 const FeatureFlagsContext = createContext<FeatureFlagsContextType | undefined>(
@@ -19,23 +21,30 @@ export const FeatureFlagsProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [flags, setFlags] = useState({
-    cryptoPayments: false,
-    loyaltyRewards: false,
+  const [flags, setFlags] = useState(() => {
+    const stored = localStorage.getItem("featureFlags");
+    return stored
+      ? JSON.parse(stored)
+      : {
+          isCryptoPaymentsEnabled: false,
+          isLoyaltyRewardsEnabled: false,
+        };
   });
 
-  const toggleFlag = (flagName: string) => {
-    setFlags((prev) => ({
+  const updateFlags = (updates: Partial<typeof flags>) => {
+    setFlags((prev: typeof flags) => ({
       ...prev,
-      [flagName]: !prev[flagName],
+      ...updates,
     }));
   };
 
-  return (
-    <FeatureFlagsContext.Provider value={{ flags, toggleFlag }}>
-      {children}
-    </FeatureFlagsContext.Provider>
-  );
+  const toggleFlag = (flagName: keyof typeof flags) => {
+    updateFlags({ [flagName]: !flags[flagName] });
+  };
+
+  <FeatureFlagsContext.Provider value={{ flags, toggleFlag }}>
+    {children}
+  </FeatureFlagsContext.Provider>;
 };
 
 export const useFeatureFlags = () => {
@@ -52,7 +61,7 @@ export const FeatureToggle = ({
   flagName,
   children,
 }: {
-  flagName: string;
+  flagName: "isCryptoPaymentsEnabled" | "isLoyaltyRewardsEnabled";
   children: React.ReactNode;
 }) => {
   const { flags } = useFeatureFlags();

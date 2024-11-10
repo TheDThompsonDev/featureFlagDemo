@@ -27,7 +27,6 @@ export default function PaymentMethod({
         <CardTitle className="text-xl text-gray-900">Payment Method</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 pt-6">
-        {/* Credit Card */}
         <div
           className={`p-4 border rounded-lg cursor-pointer flex items-center gap-3 transition-colors ${
             selectedPayment === "credit-card"
@@ -49,7 +48,6 @@ export default function PaymentMethod({
           </div>
         </div>
 
-        {/* PayPal */}
         <div
           className={`p-4 border rounded-lg cursor-pointer flex items-center gap-3 transition-colors ${
             selectedPayment === "paypal"
@@ -69,7 +67,7 @@ export default function PaymentMethod({
           </div>
         </div>
 
-        {/* Crypto Payments */}
+        {/* Crypto Payments That Is Taggled By  Feature Flag */}
         <FeatureToggle flagName="cryptoPayments">
           <div
             className={`p-4 border rounded-lg cursor-pointer flex items-center gap-3 transition-colors ${
@@ -97,7 +95,7 @@ export default function PaymentMethod({
         </FeatureToggle>
       </CardContent>
 
-      <CardFooter className="flex justify-between items-center border-t mt-6">
+      <CardFooter className="flex justify-between items-center border-t mt-6 py-6">
         <div className="text-sm text-gray-500">
           {selectedPayment === "crypto" &&
             "Cryptocurrency payments processed instantly"}
